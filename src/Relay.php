@@ -24,9 +24,9 @@ class Relay implements \Weave\Middleware\MiddlewareAdaptorInterface
 	 *
 	 * @param callable $resolver The resolver.
 	 *
-	 * @return null
+	 * @return void
 	 */
-	public function setResolver(callable $resolver)
+	public function setResolver(callable $resolver): void
 	{
 		$this->resolver = $resolver;
 	}
@@ -36,7 +36,7 @@ class Relay implements \Weave\Middleware\MiddlewareAdaptorInterface
 	 *
 	 * @return boolean
 	 */
-	public function isDoublePass()
+	public function isDoublePass(): bool
 	{
 		return true;
 	}
@@ -44,14 +44,17 @@ class Relay implements \Weave\Middleware\MiddlewareAdaptorInterface
 	/**
 	 * Trigger execution of the supplied pipeline through Relay.
 	 *
-	 * @param mixed    $pipeline The stack of middleware definitions.
-	 * @param Request  $request  The PSR7 request.
-	 * @param Response $response The PSR7 response (for double-pass stacks).
+	 * @param mixed     $pipeline The stack of middleware definitions.
+	 * @param Request   $request  The PSR7 request.
+	 * @param ?Response $response The PSR7 response (for double-pass stacks).
 	 *
 	 * @return Response
 	 */
-	public function executePipeline($pipeline, Request $request, Response $response = null)
-	{
+	public function executePipeline(
+		mixed $pipeline,
+		Request $request,
+		?Response $response = null
+	): Response {
 		$relayBuilder = new \Relay\RelayBuilder($this->resolver);
 		$relay = $relayBuilder->newInstance($pipeline);
 		return $relay($request, $response);
